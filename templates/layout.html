@@ -4,13 +4,16 @@
 	<title>Blog</title>
 	<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
 </head>
-<body>
-	{% include "includes/_navbar.html" %}
-	<div class="Container">
-		{% block body%}{% endblock %}
-	</div>
+	<body>
+		{% include "includes/_navbar.html" %}
+		<div class="Container">
+			{% block body%}{% endblock %}
+		</div>
 
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-
-</body>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+		<script src="https://cdn.ckeditor.com/4.10.0/standard/ckeditor.js"></script>
+    	<script type="text/javascript">
+      		CKEDITOR.replace('editor')
+    	</script>
+	</body>
 </html>
