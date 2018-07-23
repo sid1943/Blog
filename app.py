@@ -195,7 +195,7 @@ class ArticleForm(Form):
     title = StringField('Title', [validators.Length(min=1, max=200)])
     body = TextAreaField('Body', [validators.Length(min=4)])
 
-    
+#add article    
 @app.route('/Add_Article', methods=['GET', 'POST'])
 @is_logged_in
 def Add_Article():
@@ -222,6 +222,71 @@ def Add_Article():
 
     return render_template('Add_Article.html', form=form)
 
+#edit article    
+
+@app.route('/edit_article/<string:id>', methods=['GET', 'POST'])
+@is_logged_in
+def edit_Article(id):
+	# Create cursor
+    cur = mysql.connection.cursor()
+
+    # Get article by id
+    result = cur.execute("SELECT * FROM articles WHERE id = %s", [id])
+
+    article = cur.fetchone()
+    cur.close()
+    # Get form
+    form = ArticleForm(request.form)
+
+    # Populate article form fields
+    form.title.data = article['title']
+    form.body.data = article['body']
+
+    
+
+    if request.method == 'POST' and form.validate():
+        title = form.title.data
+        body = form.body.data
+
+        # Create Cursor
+        cur = mysql.connection.cursor()
+
+        # Execute
+        cur.execute("UPDATE articles SET title = %s, body = %s, WHERE id = %s", [id])
+
+        # Commit to DB
+        mysql.connection.commit()
+
+        #Close connection
+        cur.close()
+
+    	flash('Article Uodated', 'success')
+
+        return redirect(url_for('Dashboard'))
+
+    return render_template('edit_Article.html', form=form)
+# Delete Article
+@app.route('/delete_article/<string:id>', methods=['POST'])
+@is_logged_in
+def delete_article(id):
+    # Create cursor
+    cur = mysql.connection.cursor()
+
+    # Execute
+    cur.execute("DELETE FROM articles WHERE id = %s", [id])
+
+    # Commit to DB
+    mysql.connection.commit()
+
+    #Close connection
+    cur.close()
+
+    flash('Article Deleted', 'success')
+
+    return redirect(url_for('Dashboard'))
+
+
+	
 
 
 if __name__ == '__main__':
